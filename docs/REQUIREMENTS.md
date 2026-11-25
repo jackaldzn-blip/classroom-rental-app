@@ -114,6 +114,6 @@ Mark an item as passed only after executing it locally. Use a future date, ficti
 
 ### Test evidence
 
-On 25 November 2026, the full local suite passed: **41 tests, 0 failures, 0 errors, 0 skipped**, including both MySQL integration tests. Application startup was verified and the user confirmed the manual console workflow works. Individual manual checklist results and the absence of the prior JDBC shutdown warning were not separately recorded.
+The full local suite passed: **41 tests, 0 failures, 0 errors, 0 skipped**, including both MySQL integration tests. Application startup was verified and the user confirmed the manual console workflow works. Individual manual checklist results and the absence of the prior JDBC shutdown warning were not separately recorded.
 
 All six development phases are complete and their branches have been merged into main. The checklist above remains available for repeatable verification.
