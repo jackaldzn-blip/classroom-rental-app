@@ -37,13 +37,18 @@ Run these commands at the MySQL prompt, adjusting the absolute paths if the repo
 
 ```sql
 SOURCE E:/Projects/classroom-rental-app/sql/schema.sql;
-SOURCE E:/Projects/classroom-rental-app/sql/seed.sql;
 USE classroom_rental;
 SHOW TABLES;
+```
+
+Verify that schema.sql reports no errors and all five tables exist before proceeding.
+
+```sql
+SOURCE E:/Projects/classroom-rental-app/sql/seed.sql;
 SELECT COUNT(*) AS classroom_count FROM classrooms;
 ```
 
-Run seed.sql **only once on a fresh database**. Expected classroom count: 20. The sample customers and booking users are fictional.
+Run seed.sql **only once on a fresh database**. If a setup attempt fails, do not rerun the seed against partially populated tables. Inspect the existing data first; reset the project database only if it contains no data you need to keep. Expected classroom count: 20. The sample customers and booking users are fictional.
 
 For local development, create a dedicated account once and grant only the application's CRUD permissions. MySQL prints the randomly generated password; store it privately.
 
