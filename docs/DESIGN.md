@@ -49,7 +49,7 @@ classDiagram
         -long id
         -String name
         -int capacity
-        -boolean is_accessible
+        -boolean accessible
         -Set~Equipment~ equipment
     }
     class Booking {
