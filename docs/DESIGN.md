@@ -49,7 +49,7 @@ classDiagram
         -long id
         -String name
         -int capacity
-        -boolean accessible
+        -boolean is_accessible
         -Set~Equipment~ equipment
     }
     class Booking {
@@ -113,7 +113,7 @@ erDiagram
         bigint id PK
         varchar name
         int capacity
-        boolean accessible
+        boolean is_accessible
     }
     CLASSROOM_EQUIPMENT {
         bigint classroom_id PK,FK
@@ -131,6 +131,7 @@ erDiagram
 ```
 
 - Primary keys are generated for customers, booking users, classrooms and bookings.
+- The SQL column is named `is_accessible` because `ACCESSIBLE` is a reserved MySQL keyword; the Java field remains `accessible`.
 - Classroom names are unique. Capacity must be positive. Equipment has a composite primary key (classroom_id, equipment).
 - Use foreign keys to protect related records. The booking user must belong to the selected customer; enforce this in the service and with a composite foreign key referencing a unique (customer_id, id) pair in booking_users.
 - Booking end must be after start; comments may be null. Use local date/time at minute precision.
