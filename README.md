@@ -4,7 +4,7 @@ A Java SE console application for managing 20 training classrooms, customer regi
 
 ## Project status
 
-The console application, domain models, JDBC DAOs and services are implemented. Final acceptance testing is pending local verification.
+**Development complete — 25 November 2026.** All implementation branches have been merged into `main`. Local verification passed all 41 automated tests (39 unit tests and two MySQL integration tests), with zero failures, errors or skipped tests. The application launched successfully and the manual console workflow was confirmed working.
 
 ## Technology stack
 
@@ -151,7 +151,7 @@ mvn clean test
 Remove-Item Env:RUN_DB_TESTS
 ```
 
-Expected full-suite result: 41 tests, zero failures, zero errors and zero skipped. The DAO/service integration test verifies SQL operations and booking rules; the console integration test verifies the end-to-end workflow with real MySQL records. Both use temporary fictional records and remove their own records in finally blocks. Do not run them against production data. An interrupted test or failed cleanup may leave temporary records and incremented IDs. See the [acceptance checklist](docs/REQUIREMENTS.md#final-acceptance-checklist) for manual verification.
+Verified full-suite result on 25 November 2026: 41 tests, zero failures, zero errors and zero skipped. The DAO/service integration test verifies SQL operations and booking rules; the console integration test verifies the end-to-end workflow with real MySQL records. Both use temporary fictional records and remove their own records in finally blocks. Do not run them against production data. An interrupted test or failed cleanup may leave temporary records and incremented IDs. See the [acceptance checklist](docs/REQUIREMENTS.md#final-acceptance-checklist) for manual verification.
 
 ## Run
 
