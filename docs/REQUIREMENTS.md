@@ -75,3 +75,47 @@ classrooms, customers and room reservations.
 ## Reference
 
 [Official Assignment](https://github.com/Elnaz-Azizi/project-test-1/blob/main/ProjectTest_ClassRoomRentalApp.md)
+
+## Final acceptance checklist
+
+Mark an item as passed only after executing it locally. Use a future date, fictional data, and the local development database.
+
+| Requirement | Verification procedure | Expected result |
+| --- | --- | --- |
+| FR01 | Menu 1: register one individual and one company. | Both are saved with generated IDs and the correct types. |
+| FR02 | Menu 3: list rooms; menu 4: update a room and list again. | 20 rooms; updated name, capacity, equipment and accessibility persist. Restore the original room details afterward. |
+| FR03 | Menu 5: search with a future time range and minimum capacity, equipment and accessibility filters. | Only rooms satisfying every condition appear. |
+| FR04 | Menu 2: register a booking user; menu 6: create a reservation using that customer and user. | A generated booking ID is displayed. |
+| FR05 | Create a booking with comments and another with blank comments. | Comments are optional and saved when provided. |
+| FR06 | Repeat the search for the booked interval, then try the room with an adjacent interval. | Booked room is excluded for overlapping times; adjacent interval is allowed. |
+| FR07 | Menu 7: select the booked classroom ID. | Reservation is displayed. |
+| FR08 | Menu 8: select the customer ID. | That customer's reservations are displayed. |
+| FR09 | Menu 9: list upcoming bookings. | Future reservations are displayed in chronological order. |
+| FR10 | Exit, restart and list the reservations again. | Records remain in MySQL. SQL CRUD is demonstrated by registration, listing, updating and cancellation. |
+| FR11 | Try invalid menu options, impossible dates, invalid capacity and equipment, then choose 0. | Helpful errors; the application continues and exits normally. |
+
+### Additional acceptance checks
+
+- Cancel an upcoming test reservation using menu 10. Verify declining confirmation leaves it intact; confirming removes it and releases the classroom.
+- Try a past date or an end time before the start time. Confirm the request is rejected.
+- Run the full automated test suite with RUN_DB_TESTS=true on the local development database. Both integration tests must execute, not be skipped.
+- Inspect the database after testing. Automated tests should remove their own temporary records; manual demonstration records may remain until explicitly removed.
+- Verify that exiting via option 0 returns to PowerShell without the previous Connector/J cleanup warning.
+
+### Reproducible manual demo
+
+1. Launch the app and list classrooms (3).
+2. Pick a future date, a two-hour interval and a suitable room; record its actual ID. Search (5) with capacity 10, equipment 2 (whiteboard) and accessibility as needed.
+3. Register a fictional customer (1) and a linked booking user (2); record their IDs.
+4. Create the booking (6) using the same search criteria and selected IDs, with a short comment.
+5. Search again (5) and confirm that room is excluded for the original interval.
+6. Search an interval starting exactly when the existing booking ends; the room should be offered if no other booking conflicts.
+7. Show reports (7, 8, 9). Exit (0), restart and check that the reservation remains.
+8. Cancel the demonstration booking (10), confirm, and search the original interval again.
+9. Exit normally.
+
+### Test evidence
+
+The Phase 4 baseline passed 30 tests locally, including the MySQL DAO/service integration test. Phase 5 introduced 10 console unit tests. Phase 6 adds one end-to-end console/MySQL integration test. Expected final total: 41 tests with zero failures, errors or skips when database tests are enabled.
+
+Final automated and manual acceptance results are pending local execution; this checklist is not a certification that the tests passed.
