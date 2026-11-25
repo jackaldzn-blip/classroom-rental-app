@@ -60,7 +60,6 @@ classrooms, customers and room reservations.
 4. Models, DAO and services.
 5. Console interface.
 6. Testing and final documentation.
-7. Interview preparation.
 
 ## Acceptance Criteria
 
@@ -70,7 +69,6 @@ classrooms, customers and room reservations.
 - Adjacent bookings are accepted.
 - Data persists after restarting the application.
 - Automated tests pass.
-- The implementation can be explained independently.
 
 ## Reference
 
@@ -116,6 +114,6 @@ Mark an item as passed only after executing it locally. Use a future date, ficti
 
 ### Test evidence
 
-The Phase 4 baseline passed 30 tests locally, including the MySQL DAO/service integration test. Phase 5 introduced 10 console unit tests. Phase 6 adds one end-to-end console/MySQL integration test. Expected final total: 41 tests with zero failures, errors or skips when database tests are enabled.
+On 25 November 2026, the full local suite passed: **41 tests, 0 failures, 0 errors, 0 skipped**, including both MySQL integration tests. Application startup was verified and the user confirmed the manual console workflow works. Individual manual checklist results and the absence of the prior JDBC shutdown warning were not separately recorded.
 
-Final automated and manual acceptance results are pending local execution; this checklist is not a certification that the tests passed.
+All six development phases are complete and their branches have been merged into main. The checklist above remains available for repeatable verification.
