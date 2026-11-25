@@ -1,6 +1,7 @@
 package classroomrental.dao;
 
 import classroomrental.model.*;
+import classroomrental.service.*;
 import classroomrental.util.DatabaseConnection;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -25,6 +26,7 @@ class DaoIntegrationTest {
         BookingDao bookings = new BookingDao(database);
         long customerId = 0;
         long roomId = 0;
+        long otherCustomerId = 0;
         String suffix = UUID.randomUUID().toString();
 
         try {
@@ -76,6 +78,46 @@ class DaoIntegrationTest {
 
             assertThrows(IllegalArgumentException.class,
                     () -> bookings.create(first, 26, Set.of(), false));
+
+            CustomerService customerService = new CustomerService(customers, users);
+            ClassroomService classroomService = new ClassroomService(rooms, bookings);
+            BookingService bookingService = new BookingService(bookings, users,
+                    customerService, classroomService);
+
+            otherCustomerId = customerService.registerCustomer(CustomerType.INDIVIDUAL,
+                    "Other test customer " + suffix, "other@example.org");
+            long otherUserId = customerService.registerBookingUser(otherCustomerId,
+                    "Other test user", "other@example.org");
+            assertInstanceOf(IndividualCustomer.class, customerService.requireCustomer(otherCustomerId));
+            assertEquals(1, customerService.listBookingUsers(otherCustomerId).size());
+            assertTrue(customerService.listCustomers().stream().anyMatch(c -> c.getId() == savedCustomerId));
+
+            classroomService.updateClassroom(roomId, "Test room " + suffix, 30, true,
+                    Set.of(Equipment.PROJECTOR));
+            assertEquals(30, classroomService.requireClassroom(roomId).getCapacity());
+            assertTrue(classroomService.listClassrooms().stream().anyMatch(r -> r.getId() == savedRoomId));
+            assertTrue(classroomService.searchAvailable(start, end, 30, Set.of(Equipment.PROJECTOR), true)
+                    .stream().anyMatch(r -> r.getId() == savedRoomId));
+
+            Booking mismatchedUser = new Booking(0, roomId, customerId, otherUserId, start, end, null);
+            assertThrows(IllegalArgumentException.class,
+                    () -> bookingService.createBooking(mismatchedUser, 20, Set.of(), false));
+            Booking past = new Booking(0, roomId, customerId, userId,
+                    start.minusDays(60), end.minusDays(60), null);
+            assertThrows(IllegalArgumentException.class,
+                    () -> bookingService.createBooking(past, 20, Set.of(), false));
+
+            long serviceBookingId = bookingService.createBooking(first, 30,
+                    Set.of(Equipment.PROJECTOR), true);
+            assertFalse(classroomService.searchAvailable(start, end, 30, Set.of(Equipment.PROJECTOR), true)
+                    .stream().anyMatch(r -> r.getId() == savedRoomId));
+            assertEquals(serviceBookingId, bookingService.listByClassroom(roomId).getFirst().getId());
+            assertEquals(serviceBookingId, bookingService.listByCustomer(customerId).getFirst().getId());
+            assertTrue(bookingService.listUpcoming().stream().anyMatch(b -> b.getId() == serviceBookingId));
+            assertThrows(IllegalArgumentException.class,
+                    () -> bookingService.createBooking(overlap, 20, Set.of(), false));
+            bookingService.cancelBooking(serviceBookingId);
+            assertThrows(IllegalArgumentException.class, () -> bookingService.cancelBooking(serviceBookingId));
         } finally {
             // Delete only records belonging to this test, in foreign-key order.
             try (Connection connection = database.open()) {
@@ -83,6 +125,11 @@ class DaoIntegrationTest {
                     delete(connection, "DELETE FROM bookings WHERE customer_id = ?", customerId);
                     delete(connection, "DELETE FROM booking_users WHERE customer_id = ?", customerId);
                     delete(connection, "DELETE FROM customers WHERE id = ?", customerId);
+                }
+                if (otherCustomerId > 0) {
+                    delete(connection, "DELETE FROM bookings WHERE customer_id = ?", otherCustomerId);
+                    delete(connection, "DELETE FROM booking_users WHERE customer_id = ?", otherCustomerId);
+                    delete(connection, "DELETE FROM customers WHERE id = ?", otherCustomerId);
                 }
                 if (roomId > 0) {
                     delete(connection, "DELETE FROM classroom_equipment WHERE classroom_id = ?", roomId);
