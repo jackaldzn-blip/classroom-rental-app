@@ -1,8 +1,10 @@
--- Run once on a freshly initialized database. No real personal information.
+-- Run once on a freshly initialized database after schema.sql succeeds.
+-- If initialization fails, do not rerun against partially seeded data.
+-- No real personal information.
 USE classroom_rental;
 START TRANSACTION;
 
-INSERT INTO classrooms (name, capacity, accessible) VALUES
+INSERT INTO classrooms (name, capacity, is_accessible) VALUES
     ('Classroom 01', 10, TRUE),
     ('Classroom 02', 15, TRUE),
     ('Classroom 03', 20, TRUE),
