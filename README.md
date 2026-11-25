@@ -4,7 +4,7 @@ A Java SE console application for managing 20 training classrooms, customer regi
 
 ## Project status
 
-Phase 5: The console application, domain models, JDBC DAOs and services are implemented. Final acceptance testing and interview preparation follow.
+The console application, domain models, JDBC DAOs and services are implemented. Final acceptance testing is pending local verification.
 
 ## Technology stack
 
@@ -16,6 +16,71 @@ Java 25 LTS, Maven, MySQL 8.4, native JDBC (MySQL Connector/J), JUnit 5, VS Code
 - [Architecture, UML and database design](docs/DESIGN.md)
 - [Official assignment](https://github.com/Elnaz-Azizi/project-test-1/blob/main/ProjectTest_ClassRoomRentalApp.md)
 - [Assessment guide](https://github.com/Elnaz-Azizi/project-test-1/blob/main/README.md)
+
+## UML class diagram
+
+```mermaid
+classDiagram
+    class Customer {
+        <<abstract>>
+        -long id
+        -String name
+        -String email
+        +getType() CustomerType
+    }
+    class IndividualCustomer {
+        +getType() CustomerType
+    }
+    class CompanyCustomer {
+        +getType() CustomerType
+    }
+    class BookingUser {
+        -long id
+        -long customerId
+        -String name
+        -String email
+    }
+    class Classroom {
+        -long id
+        -String name
+        -int capacity
+        -boolean accessible
+        -Set~Equipment~ equipment
+        +meetsRequirements() boolean
+    }
+    class Booking {
+        -long id
+        -long classroomId
+        -long customerId
+        -long bookingUserId
+        -LocalDateTime startTime
+        -LocalDateTime endTime
+        -String comments
+        +overlaps() boolean
+    }
+    class CustomerType {
+        <<enumeration>>
+        INDIVIDUAL
+        COMPANY
+    }
+    class Equipment {
+        <<enumeration>>
+        PROJECTOR
+        WHITEBOARD
+        COMPUTERS
+        VIDEO_CONFERENCE
+    }
+    Customer <|-- IndividualCustomer
+    Customer <|-- CompanyCustomer
+    Customer "1" -- "0..*" BookingUser
+    Customer "1" -- "0..*" Booking
+    BookingUser "1" -- "0..*" Booking
+    Classroom "1" -- "0..*" Booking
+    Classroom --> Equipment
+    Customer --> CustomerType
+```
+
+The diagram shows domain relationships; the implementation references related records by ID. See the [design document](docs/DESIGN.md) for the database ER diagram and supporting classes.
 
 ## Setup (Windows PowerShell)
 
@@ -76,7 +141,7 @@ The password is available to processes launched from this terminal. Do not commi
 mvn clean test
 ```
 
-The unit tests validate database configuration, customer types, classroom requirements, booking time rules, availability filtering and console input without opening a database. The DAO integration test is skipped unless explicitly enabled.
+The unit tests validate database configuration, customer types, classroom requirements, booking time rules, availability filtering and console input without opening a database. The two MySQL integration tests are skipped unless explicitly enabled. The default suite contains 39 unit tests and two skipped integration tests.
 
 To verify real JDBC CRUD operations, use the local development database only, with the connection variables configured as above:
 
@@ -86,7 +151,7 @@ mvn clean test
 Remove-Item Env:RUN_DB_TESTS
 ```
 
-The integration test inserts temporary fictional customer, booking user, classroom and booking records. It verifies DAO reads, classroom updates, conflict rejection, adjacent bookings and cancellation, plus service workflows and customer/booking-user validation, then removes its own records in a finally block. Do not run it against production data. An interrupted test or failed cleanup may leave temporary records and incremented IDs.
+Expected full-suite result: 41 tests, zero failures, zero errors and zero skipped. The DAO/service integration test verifies SQL operations and booking rules; the console integration test verifies the end-to-end workflow with real MySQL records. Both use temporary fictional records and remove their own records in finally blocks. Do not run them against production data. An interrupted test or failed cleanup may leave temporary records and incremented IDs. See the [acceptance checklist](docs/REQUIREMENTS.md#final-acceptance-checklist) for manual verification.
 
 ## Run
 
