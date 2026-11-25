@@ -4,7 +4,7 @@ A Java SE console application for managing 20 training classrooms, customer regi
 
 ## Project status
 
-Phase 3: Maven and database foundation. The startup program checks the database connection and classroom count; the interactive menu and business logic are not yet implemented.
+Phase 4: Domain models and JDBC DAO classes are implemented. The startup program still checks the database connection and classroom count; service logic and the interactive menu are next.
 
 ## Technology stack
 
@@ -76,7 +76,17 @@ The password is available to processes launched from this terminal. Do not commi
 mvn clean test
 ```
 
-The initial five unit tests validate the connection configuration without opening a database.
+The unit tests validate database configuration, customer types, classroom requirements and booking time rules without opening a database. The DAO integration test is skipped unless explicitly enabled.
+
+To verify real JDBC CRUD operations, use the local development database only, with the connection variables configured as above:
+
+```powershell
+$env:RUN_DB_TESTS = 'true'
+mvn clean test
+Remove-Item Env:RUN_DB_TESTS
+```
+
+The integration test inserts temporary fictional customer, booking user, classroom and booking records. It verifies reads, classroom updates, conflict rejection, adjacent bookings and cancellation, then removes its own records in a finally block. Do not run it against production data. An interrupted test or failed cleanup may leave temporary records and incremented IDs.
 
 ## Run
 
