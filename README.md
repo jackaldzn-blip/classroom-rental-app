@@ -46,7 +46,7 @@ classDiagram
         -int capacity
         -boolean accessible
         -Set~Equipment~ equipment
-        +meetsRequirements() boolean
+        +meetsRequirements(minimumCapacity, requiredEquipment, accessibilityRequired) boolean
     }
     class Booking {
         -long id
@@ -56,7 +56,7 @@ classDiagram
         -LocalDateTime startTime
         -LocalDateTime endTime
         -String comments
-        +overlaps() boolean
+        +overlaps(start, end) boolean
     }
     class CustomerType {
         <<enumeration>>
