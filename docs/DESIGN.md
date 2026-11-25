@@ -201,10 +201,8 @@ Availability results are not reservations. To avoid a concurrent double booking,
 
 Cancellation is a small supporting feature to demonstrate SQL DELETE. Classroom updates demonstrate UPDATE, registration and booking demonstrate INSERT, and lists/search demonstrate SELECT. Keep the 20-room inventory fixed. Cancellation removes the selected booking; no audit/history workflow is required. No full login system: selecting a booking user records attribution, not authenticated identity.
 
-## 7. Testing and interview
+## 7. Testing
 
 Test invalid dates, insufficient capacity, missing equipment, accessibility, overlapping and adjacent bookings, different rooms, customer/user mismatch, persistence and cancellation. Include focused JUnit tests and MySQL integration checks, then run a manual console demo.
 
-Explain the flow: console -> service -> DAO -> MySQL. Show how the customer subclasses implement polymorphism, how streams filter rooms, how prepared statements bind values and why the overlap condition works.
-
-This is the proposed implementation baseline. Update this document if the implementation changes. See [requirements](REQUIREMENTS.md).
+This document describes the completed application design. Update it if the implementation changes. See [requirements](REQUIREMENTS.md).
