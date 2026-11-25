@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS classrooms (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     capacity INT NOT NULL,
-    accessible BOOLEAN NOT NULL,
+    is_accessible BOOLEAN NOT NULL,
     CONSTRAINT chk_classroom_capacity CHECK (capacity > 0)
 ) ENGINE=InnoDB;
 
